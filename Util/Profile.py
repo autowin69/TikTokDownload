@@ -360,6 +360,7 @@ class Profile:
                 author = item.get("author", {})
                 music = item.get("music", {})
                 video = item.get("video", {})
+                data['statistics'] = item.get('statistics', {})
                 aweme_type = item.get("aweme_type", None)
 
                 if aweme_type == 0:
@@ -388,6 +389,7 @@ class Profile:
                 data['has_more'] = has_more
                 data['aweme_type'] = aweme_type
                 data['aweme_id'] = item.get("aweme_id", None)
+                data['desc_raw'] = item.get("desc", None)
                 data['desc'] = Util.replaceT(item.get("desc", None))
                 # 将UNIX时间戳转换为格式化的字符串
                 data['create_time'] = Util.time.strftime('%Y-%m-%d %H.%M.%S', Util.time.localtime(item.get("create_time", None)))
@@ -433,7 +435,25 @@ class Profile:
         Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。\r')
         Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。')
 
-    async def get_Profile(self, count: int = 20) -> None:
+    async def process_aweme_data_hoabt2(self, aweme_data):
+        """
+        处理 aweme_data，执行下载等操作。
+
+        Args:
+            aweme_data
+        """
+        if 'aweme_id' not in aweme_data[0]:
+            # 如果数据为空，直接返回
+            Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。\r')
+            Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。')
+            return
+        # 下载作品
+        import json
+        print(json.dumps(aweme_data))
+
+        Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。\r')
+        Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。')
+    async def get_Profile(self, uid=None, count: int = 20) -> None:
         """
         获取用户的Profile并设置相应的实例变量。
 
@@ -447,7 +467,9 @@ class Profile:
 
         try:
             # 获取sec_user_id
-            self.sec_user_id = await self.get_all_sec_user_id(inputs=self.config['uid'])
+            if not uid:
+                uid = self.config['uid']
+            self.sec_user_id = await self.get_all_sec_user_id(inputs= uid)
 
             # 用户详细信息
             user_profile_info = await self.get_user_profile_info(self.headers, self.sec_user_id)
@@ -490,7 +512,7 @@ class Profile:
                     return
 
                 # 首先处理当前的 aweme_data
-                await self.process_aweme_data(aweme_data)
+                await self.process_aweme_data_hoabt2(aweme_data)
 
                 # 检查是否有更多作品需要请求
                 if self.has_more == 0:
@@ -504,6 +526,7 @@ class Profile:
                 aweme_data = await self.get_user_post_info(self.headers, self.profile_URL)
                 self.has_more = aweme_data[0].get("has_more")
                 self.max_cursor = aweme_data[0].get("max_cursor")
+                break
         except Exception as e:
             Util.progress.console.print(f'[  提示  ]:异常，{e}')
             Util.log.error(f'[  提示  ]:异常，{e}')
