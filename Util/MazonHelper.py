@@ -1,7 +1,7 @@
 import requests
 import os
 import shutil
-home_page="http://127.0.0.1:8000/api"
+home_page="https://mazon.click/api"
 def validateAweme(aweme_data):
     url=f"{home_page}/douyin/video/validate"
     return requests.post(url, json=aweme_data).json()
