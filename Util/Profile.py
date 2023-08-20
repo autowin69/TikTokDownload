@@ -361,6 +361,7 @@ class Profile:
                 music = item.get("music", {})
                 video = item.get("video", {})
                 data['statistics'] = item.get('statistics', {})
+                data['text_extra'] = item.get('text_extra', {})
                 aweme_type = item.get("aweme_type", None)
 
                 if aweme_type == 0:
@@ -448,8 +449,21 @@ class Profile:
             Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。')
             return
         # 下载作品
+        #add user
+
         import json
-        print(json.dumps(aweme_data))
+        from Util.MazonHelper import validateAweme, addUser, syncR2TmpFolder, createR2Tmp
+        createR2Tmp()
+
+        user = addUser(self.url_uid, aweme_data[0])
+        self.crawl_page = user['crawl_page']
+
+        print("Success Add user:"+ json.dumps(user))
+        rs=validateAweme(aweme_data)
+        print("Validater: "+json.dumps(rs))
+        with Util.progress:
+            await self.download.AwemeDownload(rs)
+        syncR2TmpFolder()
 
         Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。\r')
         Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。')
@@ -469,6 +483,7 @@ class Profile:
             # 获取sec_user_id
             if not uid:
                 uid = self.config['uid']
+            self.url_uid=uid
             self.sec_user_id = await self.get_all_sec_user_id(inputs= uid)
 
             # 用户详细信息
@@ -505,7 +520,7 @@ class Profile:
             self.max_cursor = aweme_data[0].get("max_cursor")
             Util.progress.console.print(f'[  提示  ]:抓获首页数据成功! 该页共{len(aweme_data)}个作品。\r')
             Util.log.info(f'[  提示  ]:抓获首页数据成功! 该页共{len(aweme_data)}个作品。')
-
+            cnt_page=0
             while True:
                 if Util.done_event.is_set():
                     Util.progress.console.print("[  提示  ]: 中断本次下载")
@@ -526,7 +541,9 @@ class Profile:
                 aweme_data = await self.get_user_post_info(self.headers, self.profile_URL)
                 self.has_more = aweme_data[0].get("has_more")
                 self.max_cursor = aweme_data[0].get("max_cursor")
-                break
+                cnt_page+=1
+                if cnt_page>self.crawl_page:
+                    break
         except Exception as e:
             Util.progress.console.print(f'[  提示  ]:异常，{e}')
             Util.log.error(f'[  提示  ]:异常，{e}')

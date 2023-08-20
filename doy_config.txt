@@ -1,0 +1,7 @@
+[r2sync]
+type = s3
+provider = Cloudflare
+access_key_id = 50adcb22060e49f2647d862a804a9a30
+secret_access_key = a56576589587ffee99e48b7249175ada1d30d9d24bc4c62ed3a779d31c9eaef5
+endpoint = https://f9c3a8281b5ed069e736fa2108f6f106.r2.cloudflarestorage.com
+acl = private

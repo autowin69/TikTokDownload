@@ -15,9 +15,9 @@ Change Log  :
 2023/08/04 00:48:30 : Add trim_filename(),download_file(),AwemeDownload() and Delete some unuseful function
 -------------------------------------------------
 '''
-
+import os.path
+import platform
 import Util
-
 XB = Util.XBogus()
 URLS = Util.Urls()
 
@@ -77,7 +77,7 @@ class Download:
                                     break
                                 dest_file.write(chunk)
                                 Util.progress.update(task_id, advance=len(chunk))
-
+                        Util.MazonHelper.moveFile2TmpFolder(path)
         except Util.aiohttp.ClientError as e:
             Util.progress.console.print(f"[  失败  ]：网络连接出错。异常：{e}")
         except ValueError as e:

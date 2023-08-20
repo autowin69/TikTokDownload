@@ -76,7 +76,7 @@ from .Profile import Profile
 from .Download import Download
 from .NickMapper import NickMapper
 from . import __version__
-
+from .MazonHelper import moveFile
 
 # 日志记录
 log = Log()
