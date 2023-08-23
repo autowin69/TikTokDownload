@@ -137,7 +137,7 @@ class Profile:
                     else:
                         raise RuntimeError('获取接口数据失败，请从删除配置文件中的cookie，重新扫码登录并检查是否触发人机验证\r')
                 else:
-                    raise Util.aiohttp.ClientError()
+                    raise Util.aiohttp.ClientError(f'本地网络错误 status_code={response.status}')
 
     async def get_all_sec_user_id(self, inputs: Util.Union[str, list]) -> Util.Union[str, list]:
         """
@@ -546,6 +546,6 @@ class Profile:
                     break
         except Exception as e:
             Util.progress.console.print(f'[  提示  ]:异常，{e}')
-            Util.log.error(f'[  提示  ]:异常，{e}')
+            Util.log.error(f'[  提示  ]:异常，{e}，{Util.traceback.format_exc()}')
             input('[  提示  ]：按任意键退出程序!\r')
             exit(0)
