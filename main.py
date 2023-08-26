@@ -9,7 +9,7 @@ if __name__ == '__main__':
         try:
             rs = requests.get("https://mazon.click/api/douyin/user/crawl/get").json()
             if "url" in rs:
-                Util.asyncio.run(Util.Profile(config, dyheaders).get_Profile(rs))
+                Util.asyncio.run(Util.Profile(config, dyheaders).get_Profile(rs['url']))
         except:
             pass
         time.sleep(3)
