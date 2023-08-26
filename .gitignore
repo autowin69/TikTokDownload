@@ -139,3 +139,4 @@ readconf.py
 .vscode
 /Util/algorithm/node_modules/
 1.py
+*.out
