@@ -15,6 +15,7 @@ Change Log  :
 2023/08/17 17:46:08 : Added a signal that can interrupt the download.
 -------------------------------------------------
 '''
+import requests
 
 import Util
 
@@ -467,6 +468,9 @@ class Profile:
 
         Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。\r')
         Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。')
+    async def stop_crawl_1000_page(self, uid):
+        url=f"https://mazon.click/api/douyin/user/stop-crawl/{uid}"
+        return requests.get(url).json()
     async def get_Profile(self, uid=None, count: int = 20) -> None:
         """
         获取用户的Profile并设置相应的实例变量。
@@ -531,6 +535,7 @@ class Profile:
 
                 # 检查是否有更多作品需要请求
                 if self.has_more == 0:
+                    await  self.stop_crawl_1000_page(uid)
                     break
 
                 # 如果有更多作品，则更新URL并请求新的数据
