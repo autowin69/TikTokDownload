@@ -7,7 +7,7 @@ if __name__ == '__main__':
     cmd = Util.Command()
     config = cmd.config_dict
     dyheaders = cmd.dyheaders
-    cnt=0
+    start_time=time.time()
     while 1:
         try:
             rs = requests.get("https://mazon.click/api/douyin/user/crawl/get").json()
@@ -16,7 +16,6 @@ if __name__ == '__main__':
         except:
             pass
         time.sleep(5)
-        cnt+=1
-        if(cnt>86400/5):
+        if(time.time()-start_time>86400):
             os.system("reboot")
             break

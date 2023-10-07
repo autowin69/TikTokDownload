@@ -444,6 +444,11 @@ class Profile:
         Args:
             aweme_data
         """
+        aweme_data_tmp=[]
+        for item in aweme_data:
+            if item["aweme_type"] == 0:
+                aweme_data_tmp.append(item)
+        aweme_data = aweme_data_tmp
         if 'aweme_id' not in aweme_data[0]:
             # 如果数据为空，直接返回
             Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。\r')
@@ -546,8 +551,8 @@ class Profile:
                 aweme_data = await self.get_user_post_info(self.headers, self.profile_URL)
                 self.has_more = aweme_data[0].get("has_more")
                 self.max_cursor = aweme_data[0].get("max_cursor")
-                cnt_page+=1
-                if cnt_page>self.crawl_page:
+                cnt_page += 1
+                if cnt_page > self.crawl_page:
                     break
         except Exception as e:
             Util.progress.console.print(f'[  提示  ]:异常，{e}')
