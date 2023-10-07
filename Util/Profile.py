@@ -449,6 +449,8 @@ class Profile:
             if item["aweme_type"] == 0:
                 aweme_data_tmp.append(item)
         aweme_data = aweme_data_tmp
+        if len(aweme_data)==0:
+            return 0
         if 'aweme_id' not in aweme_data[0]:
             # 如果数据为空，直接返回
             Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。\r')
