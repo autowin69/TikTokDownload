@@ -453,7 +453,7 @@ class Profile:
             # 如果数据为空，直接返回
             Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。\r')
             Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据为空，已跳过。')
-            return
+            return 0
         # 下载作品
         #add user
 
