@@ -7,8 +7,8 @@ then
         echo $! > /tmp/pidtiktokd;
         echo "TiktokDownload started ..."
 else
-        /tmp/pidtiktokd=$(cat /tmp/pidtiktokd);
-        if ps -p $/tmp/pidtiktokd > /dev/null
+        PID=$(cat /tmp/pidtiktokd);
+        if ps -p $PID > /dev/null
         then 
                 echo "TiktokDownload is already running ...";
         else
