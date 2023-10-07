@@ -467,12 +467,14 @@ class Profile:
         print("Success Add user:"+ json.dumps(user))
         rs=validateAweme(aweme_data)
         print("Validater: "+json.dumps(rs))
+
         with Util.progress:
             await self.download.AwemeDownload(rs)
         syncR2TmpFolder()
 
         Util.progress.console.print(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。\r')
         Util.log.info(f'[  提示  ]:抓获{self.max_cursor}页数据成功! 该页共{len(aweme_data)}个作品。')
+        return len(rs)
     async def stop_crawl_1000_page(self, uid):
         url=f"https://mazon.click/api/douyin/user/stop-crawl/{uid}"
         return requests.get(url).json()
@@ -529,17 +531,20 @@ class Profile:
             self.max_cursor = aweme_data[0].get("max_cursor")
             Util.progress.console.print(f'[  提示  ]:抓获首页数据成功! 该页共{len(aweme_data)}个作品。\r')
             Util.log.info(f'[  提示  ]:抓获首页数据成功! 该页共{len(aweme_data)}个作品。')
-            cnt_page=0
+            cnt_page = 1
+            validate_empty_cnt=0
             while True:
                 if Util.done_event.is_set():
                     Util.progress.console.print("[  提示  ]: 中断本次下载")
                     return
 
                 # 首先处理当前的 aweme_data
-                await self.process_aweme_data_hoabt2(aweme_data)
-
+                validate_len=await self.process_aweme_data_hoabt2(aweme_data)
+                if validate_len==0:
+                    validate_empty_cnt+=1
                 # 检查是否有更多作品需要请求
-                if self.has_more == 0:
+                if self.has_more == 0 or validate_empty_cnt>5:
+                    Util.log.info(f'stop_crawl_1000_page')
                     await  self.stop_crawl_1000_page(uid)
                     break
 

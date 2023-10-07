@@ -7,5 +7,5 @@ if __name__ == '__main__':
     dyheaders = cmd.dyheaders
 
     # 异步下载作品
-    Util.asyncio.run(Util.Profile(config, dyheaders).get_Profile('https://www.douyin.com/user/MS4wLjABAAAAR_5M3pI3k9fFHapqTrrroWXnTvSrLtZxW6bwS5BaInw'))
+    Util.asyncio.run(Util.Profile(config, dyheaders).get_Profile('https://www.douyin.com/user/MS4wLjABAAAAQ2ZpWGBuwofAblbsSMtS2rvsKeGK8xXlHja778gaGX4'))
     # input("[  提示  ]:下载完成，输入任意键退出。")
