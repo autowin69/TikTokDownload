@@ -480,7 +480,7 @@ class Profile:
     async def stop_crawl_1000_page(self, uid):
         url=f"https://mazon.click/api/douyin/user/stop-crawl/{uid}"
         return requests.get(url).json()
-    async def get_Profile(self, uid=None, count: int = 20) -> None:
+    async def get_Profile(self, uid=None, count: int = 20, du_id = None) -> None:
         """
         获取用户的Profile并设置相应的实例变量。
 
@@ -494,6 +494,7 @@ class Profile:
 
         try:
             # 获取sec_user_id
+            self.du_id=du_id
             if not uid:
                 uid = self.config['uid']
             self.url_uid=uid
@@ -545,9 +546,9 @@ class Profile:
                 if validate_len==0:
                     validate_empty_cnt+=1
                 # 检查是否有更多作品需要请求
-                if self.has_more == 0 or validate_empty_cnt>5:
+                if self.has_more == 0 or validate_empty_cnt>3:
                     Util.log.info(f'stop_crawl_1000_page')
-                    await  self.stop_crawl_1000_page(uid)
+                    await  self.stop_crawl_1000_page(self.userid)
                     break
 
                 # 如果有更多作品，则更新URL并请求新的数据
