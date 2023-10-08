@@ -548,7 +548,7 @@ class Profile:
                 # 检查是否有更多作品需要请求
                 if self.has_more == 0 or validate_empty_cnt>3:
                     Util.log.info(f'stop_crawl_1000_page')
-                    await  self.stop_crawl_1000_page(self.userid)
+                    await  self.stop_crawl_1000_page(self.du_id)
                     break
 
                 # 如果有更多作品，则更新URL并请求新的数据
